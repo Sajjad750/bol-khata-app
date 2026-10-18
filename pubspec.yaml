@@ -1,0 +1,67 @@
+name: khata_app
+description: "Small business ledger and credit-tracking app for shopkeepers in Pakistan."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # Local SQLite database
+  drift: ^2.28.1
+  drift_flutter: ^0.2.4
+  path_provider: ^2.1.5
+  path: ^1.9.1
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # Backend sync
+  supabase_flutter: ^2.9.1
+
+  # Audio recording (speech-to-text pipeline)
+  record: ^6.0.0
+
+  # Networking
+  http: ^1.4.0
+
+  # Currency / date formatting
+  intl: ^0.20.2
+
+  # Customer photo capture
+  image_picker: ^1.1.2
+  string_similarity: ^2.2.0
+  flutter_dotenv: ^6.0.1
+  http_parser: ^4.1.2
+  local_auth: ^3.0.2
+  crypto: ^3.0.7
+  flutter_secure_storage: 9.2.4
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  drift_dev: ^2.28.1
+  build_runner: ^2.5.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
+    - .env.example
+    - assets/branding/bol_khata_logo.png
+    - assets/branding/bol_khata_logo_black.png
+    - assets/branding/bol_khata_logo_white_on_dark.png
+    - assets/branding/bol_khata_mark_green.png
+    - assets/branding/bol_khata_mark_black.png
+    - assets/branding/bol_khata_mark_white.png
