@@ -50,7 +50,7 @@ class TransactionItemInput {
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase({QueryExecutor? executor, String name = 'khata'})
-      : super(executor ?? _openConnection(name));
+    : super(executor ?? _openConnection(name));
 
   /// In-memory DB for unit tests (offline, no Flutter path_provider needed).
   AppDatabase.memory() : super(_openMemoryConnection());
@@ -70,32 +70,32 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) async {
-          await m.createAll();
-          await _createIndexes();
-        },
-        onUpgrade: (m, from, to) async {
-          if (from < 2) {
-            await m.addColumn(customers, customers.supabaseId);
-            await m.addColumn(customers, customers.synced);
-            await m.addColumn(transactions, transactions.supabaseId);
-            await customStatement(
-              'CREATE INDEX IF NOT EXISTS idx_customers_synced '
-              'ON customers (synced) WHERE synced = 0',
-            );
-          }
-          if (from < 3) {
-            await m.addColumn(transactionItems, transactionItems.price);
-          }
-          if (from < 4) {
-            await m.addColumn(customers, customers.address);
-            await m.addColumn(customers, customers.referenceNote);
-          }
-        },
-        beforeOpen: (details) async {
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-      );
+    onCreate: (m) async {
+      await m.createAll();
+      await _createIndexes();
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.addColumn(customers, customers.supabaseId);
+        await m.addColumn(customers, customers.synced);
+        await m.addColumn(transactions, transactions.supabaseId);
+        await customStatement(
+          'CREATE INDEX IF NOT EXISTS idx_customers_synced '
+          'ON customers (synced) WHERE synced = 0',
+        );
+      }
+      if (from < 3) {
+        await m.addColumn(transactionItems, transactionItems.price);
+      }
+      if (from < 4) {
+        await m.addColumn(customers, customers.address);
+        await m.addColumn(customers, customers.referenceNote);
+      }
+    },
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+  );
 
   Future<void> _createIndexes() async {
     await customStatement(
@@ -190,15 +190,13 @@ class AppDatabase extends _$AppDatabase {
         for (final alias in aliasSet) {
           if (alias.toLowerCase() == trimmedName.toLowerCase()) continue;
           await into(customerAliases).insert(
-            CustomerAliasesCompanion.insert(
-              customerId: id,
-              alias: alias,
-            ),
+            CustomerAliasesCompanion.insert(customerId: id, alias: alias),
           );
         }
 
-        return (await (select(customers)..where((c) => c.id.equals(id)))
-                .getSingle());
+        return (await (select(
+          customers,
+        )..where((c) => c.id.equals(id))).getSingle());
       });
     } catch (e) {
       // Unique constraint on phone_number — surface a UI-friendly error.
@@ -226,17 +224,15 @@ class AppDatabase extends _$AppDatabase {
     }
 
     final id = await into(customerAliases).insert(
-      CustomerAliasesCompanion.insert(
-        customerId: customerId,
-        alias: trimmed,
-      ),
+      CustomerAliasesCompanion.insert(customerId: customerId, alias: trimmed),
     );
     // Aliases ride on the customer payload — mark customer for re-push.
     await (update(customers)..where((c) => c.id.equals(customerId))).write(
       const CustomersCompanion(synced: Value(false)),
     );
-    return (await (select(customerAliases)..where((a) => a.id.equals(id)))
-            .getSingle());
+    return (await (select(
+      customerAliases,
+    )..where((a) => a.id.equals(id))).getSingle());
   }
 
   /// Fuzzy match against primary name and all aliases, ranked by score.
@@ -297,8 +293,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Stream<Customer?> watchCustomer(int id) {
-    return (select(customers)..where((c) => c.id.equals(id)))
-        .watchSingleOrNull();
+    return (select(
+      customers,
+    )..where((c) => c.id.equals(id))).watchSingleOrNull();
   }
 
   Future<Customer?> getCustomer(int id) {
@@ -314,31 +311,28 @@ class AppDatabase extends _$AppDatabase {
     if (customer == null) return null;
 
     await transaction(() async {
-      final txnIds = await (select(transactions)
-            ..where((t) => t.customerId.equals(customerId)))
-          .map((t) => t.id)
-          .get();
+      final txnIds = await (select(
+        transactions,
+      )..where((t) => t.customerId.equals(customerId))).map((t) => t.id).get();
 
       if (txnIds.isNotEmpty) {
         // Clear self-FK before deleting so SQLite accepts the wipe.
-        await (update(transactions)
-              ..where((t) => t.customerId.equals(customerId)))
-            .write(
-          const TransactionsCompanion(
-            reversesTransactionId: Value(null),
-          ),
+        await (update(
+          transactions,
+        )..where((t) => t.customerId.equals(customerId))).write(
+          const TransactionsCompanion(reversesTransactionId: Value(null)),
         );
-        await (delete(transactionItems)
-              ..where((i) => i.transactionId.isIn(txnIds)))
-            .go();
-        await (delete(transactions)
-              ..where((t) => t.customerId.equals(customerId)))
-            .go();
+        await (delete(
+          transactionItems,
+        )..where((i) => i.transactionId.isIn(txnIds))).go();
+        await (delete(
+          transactions,
+        )..where((t) => t.customerId.equals(customerId))).go();
       }
 
-      await (delete(customerAliases)
-            ..where((a) => a.customerId.equals(customerId)))
-          .go();
+      await (delete(
+        customerAliases,
+      )..where((a) => a.customerId.equals(customerId))).go();
       await (delete(customers)..where((c) => c.id.equals(customerId))).go();
     });
 
@@ -439,8 +433,8 @@ class AppDatabase extends _$AppDatabase {
           photoPath: clearPhoto
               ? const Value(null)
               : photoPath != null
-                  ? Value(photoPath)
-                  : const Value.absent(),
+              ? Value(photoPath)
+              : const Value.absent(),
           synced: const Value(false),
         ),
       );
@@ -477,11 +471,7 @@ class AppDatabase extends _$AppDatabase {
     String sourceType = TransactionSourceType.manual,
     List<TransactionItemInput> items = const [],
   }) async {
-    _validateNewTransaction(
-      amount: amount,
-      type: type,
-      sourceType: sourceType,
-    );
+    _validateNewTransaction(amount: amount, type: type, sourceType: sourceType);
 
     return transaction(() async {
       final txnId = await into(transactions).insert(
@@ -497,8 +487,9 @@ class AppDatabase extends _$AppDatabase {
       await _insertItems(txnId, items);
       await _applyBalanceDelta(customerId, type, amount);
 
-      return (await (select(transactions)..where((t) => t.id.equals(txnId)))
-              .getSingle());
+      return (await (select(
+        transactions,
+      )..where((t) => t.id.equals(txnId))).getSingle());
     });
   }
 
@@ -517,10 +508,9 @@ class AppDatabase extends _$AppDatabase {
     }
 
     return transaction(() async {
-      final original =
-          await (select(transactions)
-                ..where((t) => t.id.equals(originalTransactionId)))
-              .getSingleOrNull();
+      final original = await (select(
+        transactions,
+      )..where((t) => t.id.equals(originalTransactionId))).getSingleOrNull();
 
       if (original == null) {
         throw TransactionCorrectionException(
@@ -539,18 +529,18 @@ class AppDatabase extends _$AppDatabase {
       }
 
       // Soft-void only — never mutate amount, type, or customerId.
-      await (update(transactions)
-            ..where((t) => t.id.equals(originalTransactionId)))
-          .write(
-            const TransactionsCompanion(
-              isVoided: Value(true),
-              synced: Value(false),
-            ),
-          );
+      await (update(
+        transactions,
+      )..where((t) => t.id.equals(originalTransactionId))).write(
+        const TransactionsCompanion(
+          isVoided: Value(true),
+          synced: Value(false),
+        ),
+      );
 
       final opposite = TransactionType.opposite(original.type);
-      final correctionNote = note ??
-          'Correction for transaction #$originalTransactionId';
+      final correctionNote =
+          note ?? 'Correction for transaction #$originalTransactionId';
 
       final correctionId = await into(transactions).insert(
         TransactionsCompanion.insert(
@@ -564,15 +554,11 @@ class AppDatabase extends _$AppDatabase {
       );
 
       // Offsetting entry undoes the original balance impact.
-      await _applyBalanceDelta(
-        original.customerId,
-        opposite,
-        original.amount,
-      );
+      await _applyBalanceDelta(original.customerId, opposite, original.amount);
 
-      return (await (select(transactions)
-            ..where((t) => t.id.equals(correctionId)))
-          .getSingle());
+      return (await (select(
+        transactions,
+      )..where((t) => t.id.equals(correctionId))).getSingle());
     });
   }
 
@@ -585,21 +571,22 @@ class AppDatabase extends _$AppDatabase {
   Stream<List<TransactionWithItems>> watchTransactionsForCustomer(
     int customerId,
   ) {
-    final txnQuery = (select(transactions)
-          ..where((t) => t.customerId.equals(customerId))
-          ..orderBy([
-            (t) => OrderingTerm.desc(t.createdAt),
-            (t) => OrderingTerm.desc(t.id),
-          ]))
-        .watch();
+    final txnQuery =
+        (select(transactions)
+              ..where((t) => t.customerId.equals(customerId))
+              ..orderBy([
+                (t) => OrderingTerm.desc(t.createdAt),
+                (t) => OrderingTerm.desc(t.id),
+              ]))
+            .watch();
 
     return txnQuery.asyncMap((txns) async {
       if (txns.isEmpty) return const <TransactionWithItems>[];
 
       final ids = txns.map((t) => t.id).toList();
-      final itemRows = await (select(transactionItems)
-            ..where((i) => i.transactionId.isIn(ids)))
-          .get();
+      final itemRows = await (select(
+        transactionItems,
+      )..where((i) => i.transactionId.isIn(ids))).get();
 
       final itemsByTxn = <int, List<TransactionItem>>{};
       for (final item in itemRows) {
@@ -667,16 +654,16 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<String>> getAliasesForCustomer(int customerId) async {
-    final rows = await (select(customerAliases)
-          ..where((a) => a.customerId.equals(customerId)))
-        .get();
+    final rows = await (select(
+      customerAliases,
+    )..where((a) => a.customerId.equals(customerId))).get();
     return rows.map((r) => r.alias).toList();
   }
 
   Future<List<TransactionItem>> getItemsForTransaction(int transactionId) {
-    return (select(transactionItems)
-          ..where((i) => i.transactionId.equals(transactionId)))
-        .get();
+    return (select(
+      transactionItems,
+    )..where((i) => i.transactionId.equals(transactionId))).get();
   }
 
   /// Shop-wide: money still owed to the shopkeeper + money already received.
@@ -714,18 +701,19 @@ class AppDatabase extends _$AppDatabase {
 
   /// Genuine payment entries with customer + line items (newest first).
   Stream<List<TransactionWithCustomer>> watchReceivedPayments() {
-    final txnQuery = (select(transactions)
-          ..where(
-            (t) =>
-                t.type.equals(TransactionType.paymentReceived) &
-                t.isVoided.equals(false) &
-                t.reversesTransactionId.isNull(),
-          )
-          ..orderBy([
-            (t) => OrderingTerm.desc(t.createdAt),
-            (t) => OrderingTerm.desc(t.id),
-          ]))
-        .watch();
+    final txnQuery =
+        (select(transactions)
+              ..where(
+                (t) =>
+                    t.type.equals(TransactionType.paymentReceived) &
+                    t.isVoided.equals(false) &
+                    t.reversesTransactionId.isNull(),
+              )
+              ..orderBy([
+                (t) => OrderingTerm.desc(t.createdAt),
+                (t) => OrderingTerm.desc(t.id),
+              ]))
+            .watch();
 
     return txnQuery.asyncMap((txns) async {
       if (txns.isEmpty) return const <TransactionWithCustomer>[];
@@ -733,16 +721,14 @@ class AppDatabase extends _$AppDatabase {
       final customerIds = txns.map((t) => t.customerId).toSet().toList();
       final txnIds = txns.map((t) => t.id).toList();
 
-      final customerRows = await (select(customers)
-            ..where((c) => c.id.isIn(customerIds)))
-          .get();
-      final byCustomerId = {
-        for (final c in customerRows) c.id: c,
-      };
+      final customerRows = await (select(
+        customers,
+      )..where((c) => c.id.isIn(customerIds))).get();
+      final byCustomerId = {for (final c in customerRows) c.id: c};
 
-      final itemRows = await (select(transactionItems)
-            ..where((i) => i.transactionId.isIn(txnIds)))
-          .get();
+      final itemRows = await (select(
+        transactionItems,
+      )..where((i) => i.transactionId.isIn(txnIds))).get();
       final itemsByTxn = <int, List<TransactionItem>>{};
       for (final item in itemRows) {
         itemsByTxn.putIfAbsent(item.transactionId, () => []).add(item);
@@ -772,11 +758,7 @@ class AppDatabase extends _$AppDatabase {
     required String sourceType,
   }) {
     if (amount <= 0) {
-      throw ArgumentError.value(
-        amount,
-        'amount',
-        'Amount must be positive',
-      );
+      throw ArgumentError.value(amount, 'amount', 'Amount must be positive');
     }
     if (!TransactionType.all.contains(type)) {
       throw ArgumentError.value(
@@ -816,9 +798,9 @@ class AppDatabase extends _$AppDatabase {
     String type,
     double amount,
   ) async {
-    final customer = await (select(customers)
-          ..where((c) => c.id.equals(customerId)))
-        .getSingle();
+    final customer = await (select(
+      customers,
+    )..where((c) => c.id.equals(customerId))).getSingle();
 
     final delta = type == TransactionType.creditGiven ? amount : -amount;
     await (update(customers)..where((c) => c.id.equals(customerId))).write(

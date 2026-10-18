@@ -20,11 +20,7 @@ Future<void> showAmountEntrySheet({
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (ctx) {
-      return _AmountEntrySheet(
-        title: title,
-        type: type,
-        onSave: onSave,
-      );
+      return _AmountEntrySheet(title: title, type: type, onSave: onSave);
     },
   );
 }
@@ -96,8 +92,7 @@ class _AmountEntrySheetState extends State<_AmountEntrySheet> {
   @override
   Widget build(BuildContext context) {
     final isCredit = widget.type == TransactionType.creditGiven;
-    final accent =
-        isCredit ? KhataColors.primaryGreen : KhataColors.amber;
+    final accent = isCredit ? KhataColors.primaryGreen : KhataColors.amber;
     final display = _digits.isEmpty ? '0' : _digits;
 
     return Padding(
@@ -121,10 +116,7 @@ class _AmountEntrySheetState extends State<_AmountEntrySheet> {
           const SizedBox(height: 16),
           Text(
             widget.title,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           Text(

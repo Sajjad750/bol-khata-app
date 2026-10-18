@@ -31,7 +31,7 @@ class CustomerAvatar extends StatelessWidget {
           width: size,
           height: size,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _InitialsDisk(name: name, size: size),
+          errorBuilder: (_, _, _) => _InitialsDisk(name: name, size: size),
         ),
       );
     }

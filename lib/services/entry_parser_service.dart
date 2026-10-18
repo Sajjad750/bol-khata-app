@@ -12,12 +12,7 @@ enum ParseConfidence { high, low }
 
 /// One line item extracted from speech (editable on confirm screen).
 class ParsedItem {
-  ParsedItem({
-    required this.itemName,
-    this.quantity,
-    this.unit,
-    this.price,
-  });
+  ParsedItem({required this.itemName, this.quantity, this.unit, this.price});
 
   String itemName;
   double? quantity;
@@ -27,17 +22,15 @@ class ParsedItem {
   double? price;
 
   Map<String, dynamic> toJson() => {
-        'itemName': itemName,
-        'quantity': quantity,
-        'unit': unit,
-        'price': price,
-      };
+    'itemName': itemName,
+    'quantity': quantity,
+    'unit': unit,
+    'price': price,
+  };
 
   factory ParsedItem.fromJson(Map<String, dynamic> json) {
-    final name = _asString(
-          json['itemName'] ?? json['item_name'] ?? json['name'],
-        ) ??
-        '';
+    final name =
+        _asString(json['itemName'] ?? json['item_name'] ?? json['name']) ?? '';
     return ParsedItem(
       itemName: name,
       quantity: _asDouble(json['quantity'] ?? json['qty']),
@@ -134,10 +127,9 @@ String _normalizeType(Object? raw) {
 /// Whisper transcription — one provider for the full voice pipeline.
 class EntryParserService {
   EntryParserService({http.Client? httpClient, this.apiKeyOverride})
-      : _client = httpClient ?? http.Client();
+    : _client = httpClient ?? http.Client();
 
-  static const _endpoint =
-      'https://api.groq.com/openai/v1/chat/completions';
+  static const _endpoint = 'https://api.groq.com/openai/v1/chat/completions';
   static const _model = 'llama-3.3-70b-versatile';
 
   final http.Client _client;
@@ -165,10 +157,8 @@ class EntryParserService {
         'ALL string fields MUST be Roman Urdu using Latin letters only (never Devanagari, never Nastaliq).',
     };
     final examples = switch (language) {
-      AppLanguage.english =>
-        'Example: "Ahmed", "five kg rice", "gave credit".',
-      AppLanguage.urdu =>
-        'Example: Urdu script names and items.',
+      AppLanguage.english => 'Example: "Ahmed", "five kg rice", "gave credit".',
+      AppLanguage.urdu => 'Example: Urdu script names and items.',
       AppLanguage.romanUrdu =>
         'Example: "Ahmed", "paanch kilo chawal", "udhar diya".',
     };
@@ -220,10 +210,10 @@ Numbers: paanch sou / five hundred = 500; paanch kilo -> qty 5 unit kg.
 
     final normalized = switch (language) {
       AppLanguage.romanUrdu => await RomanUrdu.ensure(
-          text: cleaned,
-          apiKey: key,
-          httpClient: _client,
-        ),
+        text: cleaned,
+        apiKey: key,
+        httpClient: _client,
+      ),
       AppLanguage.english || AppLanguage.urdu => cleaned,
     };
 
@@ -251,10 +241,7 @@ Numbers: paanch sou / five hundred = 500; paanch kilo -> qty 5 unit kg.
       'response_format': {'type': 'json_object'},
       'messages': [
         {'role': 'system', 'content': systemPromptFor(language)},
-        {
-          'role': 'user',
-          'content': 'Transcript:\n$transcript',
-        },
+        {'role': 'user', 'content': 'Transcript:\n$transcript'},
       ],
     });
 
@@ -317,8 +304,9 @@ Numbers: paanch sou / five hundred = 500; paanch kilo -> qty 5 unit kg.
     }
 
     final confRaw = _asString(map['confidence'])?.toLowerCase();
-    final confidence =
-        confRaw == 'low' ? ParseConfidence.low : ParseConfidence.high;
+    final confidence = confRaw == 'low'
+        ? ParseConfidence.low
+        : ParseConfidence.high;
 
     final itemsRaw = map['items'];
     final items = <ParsedItem>[];
@@ -334,7 +322,8 @@ Numbers: paanch sou / five hundred = 500; paanch kilo -> qty 5 unit kg.
       }
     }
 
-    var spoken = _asString(
+    var spoken =
+        _asString(
           map['spoken_reference'] ??
               map['spokenReference'] ??
               map['customer'] ??
@@ -444,7 +433,9 @@ Numbers: paanch sou / five hundred = 500; paanch kilo -> qty 5 unit kg.
       if (name.isNotEmpty && name.length <= 40) return name;
     }
 
-    final first = cleaned.split(' ').firstWhere(
+    final first = cleaned
+        .split(' ')
+        .firstWhere(
           (w) => RegExp(r'^[A-Za-z\u0600-\u06FF]{2,}').hasMatch(w),
           orElse: () => '',
         );

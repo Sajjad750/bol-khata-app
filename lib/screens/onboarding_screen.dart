@@ -165,7 +165,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       await lock.setBiometricEnabled(enableBio && _biometricAvailable);
 
       if (_phoneDeferred) {
-        await ref.read(authControllerProvider.notifier).completeLocalOnboarding();
+        await ref
+            .read(authControllerProvider.notifier)
+            .completeLocalOnboarding();
         return;
       }
 
@@ -174,10 +176,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       if (userId == null || phone == null) {
         throw AuthException('Session missing after verification.');
       }
-      await ref.read(authControllerProvider.notifier).completeOnboarding(
-            phoneE164: phone,
-            userId: userId,
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .completeOnboarding(phoneE164: phone, userId: userId);
     } catch (e) {
       setState(() => _error = _friendly(e));
     } finally {
@@ -214,17 +215,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 BolKhataBrand.appName,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      color: KhataColors.primaryGreen,
-                      fontSize: 36,
-                    ),
+                  color: KhataColors.primaryGreen,
+                  fontSize: 36,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 _subtitle,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey.shade700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade700),
               ),
               const SizedBox(height: 28),
               if (_error != null) ...[

@@ -90,7 +90,9 @@ class _AddCustomerScreenState extends ConsumerState<AddCustomerScreen> {
 
     setState(() => _saving = true);
     try {
-      await ref.read(databaseProvider).addCustomer(
+      await ref
+          .read(databaseProvider)
+          .addCustomer(
             name: _nameController.text.trim(),
             address: _addressController.text.trim(),
             phoneNumber: _numberPending ? null : _phoneController.text.trim(),

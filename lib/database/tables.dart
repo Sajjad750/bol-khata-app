@@ -41,8 +41,8 @@ class CustomerAliases extends Table {
 
   @override
   List<String> get customConstraints => [
-        'FOREIGN KEY (customer_id) REFERENCES customers (id)',
-      ];
+    'FOREIGN KEY (customer_id) REFERENCES customers (id)',
+  ];
 }
 
 /// Immutable ledger entries. Mistakes are fixed by inserting corrections —
@@ -66,8 +66,7 @@ class Transactions extends Table {
   BoolColumn get synced => boolean().withDefault(const Constant(false))();
 
   /// `"manual"` or `"voice"`.
-  TextColumn get sourceType =>
-      text().withDefault(const Constant('manual'))();
+  TextColumn get sourceType => text().withDefault(const Constant('manual'))();
 
   /// Points at the original mistaken entry when this row is a correction.
   IntColumn get reversesTransactionId => integer().nullable()();
@@ -80,12 +79,12 @@ class Transactions extends Table {
 
   @override
   List<String> get customConstraints => [
-        'FOREIGN KEY (customer_id) REFERENCES customers (id)',
-        'FOREIGN KEY (reverses_transaction_id) REFERENCES transactions (id)',
-        "CHECK (type IN ('credit_given', 'payment_received'))",
-        "CHECK (source_type IN ('manual', 'voice'))",
-        'CHECK (amount > 0)',
-      ];
+    'FOREIGN KEY (customer_id) REFERENCES customers (id)',
+    'FOREIGN KEY (reverses_transaction_id) REFERENCES transactions (id)',
+    "CHECK (type IN ('credit_given', 'payment_received'))",
+    "CHECK (source_type IN ('manual', 'voice'))",
+    'CHECK (amount > 0)',
+  ];
 }
 
 /// Optional line items attached to a transaction (many txns have none).
@@ -105,8 +104,8 @@ class TransactionItems extends Table {
 
   @override
   List<String> get customConstraints => [
-        'FOREIGN KEY (transaction_id) REFERENCES transactions (id)',
-      ];
+    'FOREIGN KEY (transaction_id) REFERENCES transactions (id)',
+  ];
 }
 
 /// Allowed [Transactions.type] values.

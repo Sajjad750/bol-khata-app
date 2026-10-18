@@ -31,10 +31,7 @@ void main() {
 
     // Duplicate phone must fail clearly for the UI.
     expect(
-      () => db.addCustomer(
-        name: 'Someone Else',
-        phoneNumber: '03001234567',
-      ),
+      () => db.addCustomer(name: 'Someone Else', phoneNumber: '03001234567'),
       throwsA(isA<DuplicatePhoneNumberException>()),
     );
 
@@ -50,10 +47,9 @@ void main() {
       ],
     );
 
-    var customer = await (db.select(db.customers)
-          ..where((c) => c.id.equals(ahmed1.id)))
-        .getSingle();
-    print('Balance after credit_given 500: ${customer.currentBalance}');
+    var customer = await (db.select(
+      db.customers,
+    )..where((c) => c.id.equals(ahmed1.id))).getSingle();
     expect(customer.currentBalance, 500);
 
     // Correction voids original and inserts offsetting payment.
@@ -62,20 +58,14 @@ void main() {
       note: 'Entered wrong amount by mistake',
     );
 
-    customer = await (db.select(db.customers)
-          ..where((c) => c.id.equals(ahmed1.id)))
-        .getSingle();
-    print('Balance after correction: ${customer.currentBalance}');
+    customer = await (db.select(
+      db.customers,
+    )..where((c) => c.id.equals(ahmed1.id))).getSingle();
     expect(customer.currentBalance, 0);
     expect(correction.reversesTransactionId, original.id);
     expect(correction.type, TransactionType.paymentReceived);
 
     final history = await db.getTransactionsForCustomer(ahmed1.id);
-    print(
-      'History flags: '
-      '${history.map((h) => 'id=${h.transaction.id} voided=${h.isVoided} '
-          'correction=${h.isCorrection} items=${h.items.length}').join(' | ')}',
-    );
     expect(history.length, 2);
     expect(history.any((h) => h.isVoided), isTrue);
     expect(history.any((h) => h.isCorrection), isTrue);
@@ -86,11 +76,6 @@ void main() {
 
     // Shared alias "Ahmed bhai" should be ambiguous across both customers.
     final search = await db.searchCustomers('Ahmed bhai');
-    print(
-      'Fuzzy search for "Ahmed bhai": ambiguous=${search.ambiguous}, '
-      'matches=${search.matches.map((m) => '${m.name}(${m.phoneNumber}) '
-          'score=${m.score.toStringAsFixed(2)}').join(', ')}',
-    );
 
     expect(search.matches.length, greaterThanOrEqualTo(2));
     expect(search.ambiguous, isTrue);
@@ -108,11 +93,10 @@ void main() {
 
     // Foreign keys enforced offline (invalid customer_id must fail).
     expect(
-      () => db.into(db.customerAliases).insert(
-            CustomerAliasesCompanion.insert(
-              customerId: 999999,
-              alias: 'ghost',
-            ),
+      () => db
+          .into(db.customerAliases)
+          .insert(
+            CustomerAliasesCompanion.insert(customerId: 999999, alias: 'ghost'),
           ),
       throwsA(anything),
     );

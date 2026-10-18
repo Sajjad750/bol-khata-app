@@ -19,7 +19,10 @@ enum TranscriptionFailureKind {
 }
 
 class TranscriptionException implements Exception {
-  TranscriptionException(this.message, {this.kind = TranscriptionFailureKind.unknown});
+  TranscriptionException(
+    this.message, {
+    this.kind = TranscriptionFailureKind.unknown,
+  });
 
   final String message;
   final TranscriptionFailureKind kind;
@@ -33,7 +36,7 @@ class TranscriptionException implements Exception {
 /// Output script follows [AppLanguage]: English, Urdu (Nastaliq), or Roman Urdu.
 class TranscriptionService {
   TranscriptionService({http.Client? httpClient, this.apiKeyOverride})
-      : _client = httpClient ?? http.Client();
+    : _client = httpClient ?? http.Client();
 
   static const _endpoint =
       'https://api.groq.com/openai/v1/audio/transcriptions';
@@ -75,10 +78,10 @@ class TranscriptionService {
   }
 
   String _promptFor(AppLanguage language) => switch (language) {
-        AppLanguage.english => _englishPrompt,
-        AppLanguage.urdu => _urduPrompt,
-        AppLanguage.romanUrdu => _romanUrduPrompt,
-      };
+    AppLanguage.english => _englishPrompt,
+    AppLanguage.urdu => _urduPrompt,
+    AppLanguage.romanUrdu => _romanUrduPrompt,
+  };
 
   /// Transcribes [audioFilePath] via Groq Whisper for [language].
   Future<String> transcribe(
@@ -86,9 +89,7 @@ class TranscriptionService {
     AppLanguage language = AppLanguage.romanUrdu,
   }) async {
     final key = _apiKey;
-    if (key == null ||
-        key.isEmpty ||
-        key.contains('your-groq-api-key')) {
+    if (key == null || key.isEmpty || key.contains('your-groq-api-key')) {
       throw TranscriptionException(
         'Groq API key missing. Add GROQ_API_KEY to your .env file.',
         kind: TranscriptionFailureKind.missingApiKey,
@@ -130,9 +131,9 @@ class TranscriptionService {
 
     late http.StreamedResponse streamed;
     try {
-      streamed = await _client.send(request).timeout(
-        const Duration(seconds: 45),
-      );
+      streamed = await _client
+          .send(request)
+          .timeout(const Duration(seconds: 45));
     } on SocketException {
       throw TranscriptionException(
         'No internet connection. Check your network and try again.',
@@ -183,11 +184,7 @@ class TranscriptionService {
 
     switch (language) {
       case AppLanguage.romanUrdu:
-        return RomanUrdu.ensure(
-          text: text,
-          apiKey: key,
-          httpClient: _client,
-        );
+        return RomanUrdu.ensure(text: text, apiKey: key, httpClient: _client);
       case AppLanguage.english:
       case AppLanguage.urdu:
         return text;

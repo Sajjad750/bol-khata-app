@@ -155,9 +155,10 @@ class SyncService with WidgetsBindingObserver {
 
         String? remoteReversalId;
         if (txn.reversesTransactionId != null) {
-          final original = await (_db.select(_db.transactions)
-                ..where((t) => t.id.equals(txn.reversesTransactionId!)))
-              .getSingleOrNull();
+          final original =
+              await (_db.select(_db.transactions)
+                    ..where((t) => t.id.equals(txn.reversesTransactionId!)))
+                  .getSingleOrNull();
           remoteReversalId = original?.supabaseId;
         }
 
@@ -210,10 +211,7 @@ class SyncService with WidgetsBindingObserver {
         final remoteId = row['id']?.toString();
         if (remoteId == null || remoteId.isEmpty) continue;
 
-        await _db.markTransactionSynced(
-          localId: txn.id,
-          supabaseId: remoteId,
-        );
+        await _db.markTransactionSynced(localId: txn.id, supabaseId: remoteId);
       } catch (_) {
         // Silent retry next cycle.
       }

@@ -61,24 +61,24 @@ void main() {
     expect(controller.state.message, contains('Wrong PIN'));
   });
 
-  test('local onboarding (phone later) reaches home without Supabase', () async {
-    final lock = LocalLockService();
-    await lock.setPin('5555');
-    final controller = AuthController(lock);
-    await controller.completeLocalOnboarding();
-    expect(controller.state.route, AuthRoute.home);
-    expect(controller.state.userId, startsWith('local_'));
-    expect(await lock.isPhoneDeferred, isTrue);
-    expect(await lock.hasLinkedPhone, isFalse);
-  });
+  test(
+    'local onboarding (phone later) reaches home without Supabase',
+    () async {
+      final lock = LocalLockService();
+      await lock.setPin('5555');
+      final controller = AuthController(lock);
+      await controller.completeLocalOnboarding();
+      expect(controller.state.route, AuthRoute.home);
+      expect(controller.state.userId, startsWith('local_'));
+      expect(await lock.isPhoneDeferred, isTrue);
+      expect(await lock.hasLinkedPhone, isFalse);
+    },
+  );
 
   test('deferred phone unlock does not require session', () async {
     final lock = LocalLockService();
     await lock.setPin('6666');
-    await lock.setOnboarded(
-      userId: 'local_test_user',
-      phoneDeferred: true,
-    );
+    await lock.setOnboarded(userId: 'local_test_user', phoneDeferred: true);
     final controller = AuthController(lock);
     await controller.unlockWithPin('6666');
     expect(controller.state.route, AuthRoute.home);

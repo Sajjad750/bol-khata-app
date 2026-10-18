@@ -52,8 +52,8 @@ class CustomerDetailScreen extends ConsumerWidget {
         final balanceColor = balance > 0
             ? KhataColors.primaryGreen
             : balance < 0
-                ? KhataColors.debtRed
-                : Colors.grey.shade700;
+            ? KhataColors.debtRed
+            : Colors.grey.shade700;
 
         return Scaffold(
           appBar: AppBar(
@@ -120,9 +120,9 @@ class CustomerDetailScreen extends ConsumerWidget {
                                     MaterialPageRoute<bool>(
                                       builder: (_) =>
                                           VoiceConfirmScreen.manualForCustomer(
-                                        customerId: customer.id,
-                                        customerName: customer.name,
-                                      ),
+                                            customerId: customer.id,
+                                            customerName: customer.name,
+                                          ),
                                     ),
                                   );
                                 },
@@ -194,8 +194,8 @@ class CustomerDetailScreen extends ConsumerWidget {
                       balance > 0
                           ? ref.watch(appStringsProvider).customerOwesYou
                           : balance < 0
-                              ? ref.watch(appStringsProvider).youOweCustomer
-                              : ref.watch(appStringsProvider).settled,
+                          ? ref.watch(appStringsProvider).youOweCustomer
+                          : ref.watch(appStringsProvider).settled,
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey.shade600,
@@ -232,7 +232,7 @@ class CustomerDetailScreen extends ConsumerWidget {
                     return ListView.separated(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                       itemCount: txns.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         return _TxnTile(
                           item: txns[index],
@@ -268,7 +268,9 @@ class CustomerDetailScreen extends ConsumerWidget {
                                 title: ref.read(appStringsProvider).paymentLiya,
                                 type: TransactionType.paymentReceived,
                                 onSave: (amount, note) async {
-                                  await ref.read(databaseProvider).addTransaction(
+                                  await ref
+                                      .read(databaseProvider)
+                                      .addTransaction(
                                         customerId: customerId,
                                         amount: amount,
                                         type: TransactionType.paymentReceived,
@@ -295,7 +297,9 @@ class CustomerDetailScreen extends ConsumerWidget {
                                 title: ref.read(appStringsProvider).udharDiya,
                                 type: TransactionType.creditGiven,
                                 onSave: (amount, note) async {
-                                  await ref.read(databaseProvider).addTransaction(
+                                  await ref
+                                      .read(databaseProvider)
+                                      .addTransaction(
                                         customerId: customerId,
                                         amount: amount,
                                         type: TransactionType.creditGiven,
@@ -345,9 +349,7 @@ class CustomerDetailScreen extends ConsumerWidget {
             child: Text(s.cancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: KhataColors.debtRed,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: KhataColors.debtRed),
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(s.deleteKhataConfirm),
           ),
@@ -357,8 +359,9 @@ class CustomerDetailScreen extends ConsumerWidget {
     if (confirmed != true || !context.mounted) return;
 
     try {
-      final deleted =
-          await ref.read(databaseProvider).deleteCustomer(customer.id);
+      final deleted = await ref
+          .read(databaseProvider)
+          .deleteCustomer(customer.id);
       final photoPath = deleted?.photoPath ?? customer.photoPath;
       if (photoPath != null && photoPath.isNotEmpty) {
         try {
@@ -370,9 +373,9 @@ class CustomerDetailScreen extends ConsumerWidget {
         deleted?.supabaseId ?? customer.supabaseId,
       );
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.khataDeleted)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(s.khataDeleted)));
       Navigator.of(context).pop();
     } catch (e) {
       if (!context.mounted) return;
@@ -415,10 +418,9 @@ class CustomerDetailScreen extends ConsumerWidget {
     if (picked == null) return;
 
     final path = await persistCustomerPhoto(picked.path);
-    await ref.read(databaseProvider).updateCustomerPhoto(
-          customerId: customer.id,
-          photoPath: path,
-        );
+    await ref
+        .read(databaseProvider)
+        .updateCustomerPhoto(customerId: customer.id, photoPath: path);
   }
 
   Future<void> _promptPhone(
@@ -454,13 +456,14 @@ class CustomerDetailScreen extends ConsumerWidget {
                     final value = controller.text.trim();
                     if (!PhoneNumbers.isValidPakistaniMobile(value)) {
                       setState(() {
-                        error =
-                            'Enter a valid Pakistani mobile (03XXXXXXXXX)';
+                        error = 'Enter a valid Pakistani mobile (03XXXXXXXXX)';
                       });
                       return;
                     }
                     try {
-                      await ref.read(databaseProvider).updateCustomerPhone(
+                      await ref
+                          .read(databaseProvider)
+                          .updateCustomerPhone(
                             customerId: customerId,
                             phoneNumber: value,
                           );
@@ -481,9 +484,9 @@ class CustomerDetailScreen extends ConsumerWidget {
     );
 
     if (saved == true && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Phone number saved')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Phone number saved')));
     }
   }
 }
@@ -549,10 +552,7 @@ class _ManualAddAction extends StatelessWidget {
 }
 
 class _TxnTile extends StatelessWidget {
-  const _TxnTile({
-    required this.item,
-    required this.customerName,
-  });
+  const _TxnTile({required this.item, required this.customerName});
 
   final TransactionWithItems item;
   final String customerName;
@@ -567,26 +567,26 @@ class _TxnTile extends StatelessWidget {
     final itemPreview = item.items.isEmpty
         ? null
         : item.items
-            .map((i) {
-              final qty = i.quantity;
-              final unit = i.unit?.trim();
-              final price = i.price;
-              final namePart = () {
-                if (qty == null) return i.itemName;
-                final q = qty == qty.roundToDouble()
-                    ? qty.toInt().toString()
-                    : qty.toString();
-                return unit != null && unit.isNotEmpty
-                    ? '${i.itemName} ($q $unit)'
-                    : '${i.itemName} ($q)';
-              }();
-              if (price == null || price <= 0) return namePart;
-              final p = price == price.roundToDouble()
-                  ? price.toInt().toString()
-                  : price.toStringAsFixed(2);
-              return '$namePart — Rs $p';
-            })
-            .join(', ');
+              .map((i) {
+                final qty = i.quantity;
+                final unit = i.unit?.trim();
+                final price = i.price;
+                final namePart = () {
+                  if (qty == null) return i.itemName;
+                  final q = qty == qty.roundToDouble()
+                      ? qty.toInt().toString()
+                      : qty.toString();
+                  return unit != null && unit.isNotEmpty
+                      ? '${i.itemName} ($q $unit)'
+                      : '${i.itemName} ($q)';
+                }();
+                if (price == null || price <= 0) return namePart;
+                final p = price == price.roundToDouble()
+                    ? price.toInt().toString()
+                    : price.toStringAsFixed(2);
+                return '$namePart — Rs $p';
+              })
+              .join(', ');
 
     return Material(
       color: KhataColors.softGrey,
@@ -621,8 +621,9 @@ class _TxnTile extends StatelessWidget {
                   ),
                   child: Icon(
                     isCredit ? Icons.arrow_upward : Icons.arrow_downward,
-                    color:
-                        isCredit ? KhataColors.primaryGreen : KhataColors.amber,
+                    color: isCredit
+                        ? KhataColors.primaryGreen
+                        : KhataColors.amber,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -689,14 +690,10 @@ class _TxnTile extends StatelessWidget {
                         color: isCredit
                             ? KhataColors.primaryGreen
                             : KhataColors.amber,
-                        decoration:
-                            voided ? TextDecoration.lineThrough : null,
+                        decoration: voided ? TextDecoration.lineThrough : null,
                       ),
                     ),
-                    Icon(
-                      Icons.chevron_right,
-                      color: Colors.grey.shade500,
-                    ),
+                    Icon(Icons.chevron_right, color: Colors.grey.shade500),
                   ],
                 ),
               ],

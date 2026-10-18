@@ -11,9 +11,18 @@ void main() {
   });
 
   test('classifies Roman Urdu vs English', () {
-    expect(RomanUrdu.looksLikeRomanUrdu('Ahmed ko paanch sau udhar diya'), isTrue);
-    expect(RomanUrdu.looksLikeEnglish('Gave Ahmed five hundred credit'), isTrue);
-    expect(RomanUrdu.looksLikeEnglish('Ahmed ko paanch sau udhar diya'), isFalse);
+    expect(
+      RomanUrdu.looksLikeRomanUrdu('Ahmed ko paanch sau udhar diya'),
+      isTrue,
+    );
+    expect(
+      RomanUrdu.looksLikeEnglish('Gave Ahmed five hundred credit'),
+      isTrue,
+    );
+    expect(
+      RomanUrdu.looksLikeEnglish('Ahmed ko paanch sau udhar diya'),
+      isFalse,
+    );
   });
 
   test('ensure skips LLM when already Roman Urdu', () async {

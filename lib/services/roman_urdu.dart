@@ -90,10 +90,7 @@ abstract final class RomanUrdu {
                       '- If input is already Roman Urdu, return it cleaned.\n'
                       '- Output one line only, no quotes or commentary.',
                 },
-                {
-                  'role': 'user',
-                  'content': cleaned,
-                },
+                {'role': 'user', 'content': cleaned},
               ],
             }),
           )

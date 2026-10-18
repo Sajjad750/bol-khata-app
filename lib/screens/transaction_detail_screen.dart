@@ -33,9 +33,7 @@ class TransactionDetailScreen extends ConsumerWidget {
             child: Text(s.cancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: KhataColors.debtRed,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: KhataColors.debtRed),
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(s.deleteKhataConfirm),
           ),
@@ -45,13 +43,13 @@ class TransactionDetailScreen extends ConsumerWidget {
     if (confirmed != true || !context.mounted) return;
 
     try {
-      await ref.read(databaseProvider).addCorrectingTransaction(
-            originalTransactionId: item.transaction.id,
-          );
+      await ref
+          .read(databaseProvider)
+          .addCorrectingTransaction(originalTransactionId: item.transaction.id);
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.entryDeleted)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(s.entryDeleted)));
       Navigator.of(context).pop();
     } catch (e) {
       if (!context.mounted) return;
@@ -184,10 +182,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     isCredit
                         ? 'No item breakdown — plain udhar amount.'
                         : 'No item breakdown — plain payment amount.',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey.shade700,
-                    ),
+                    style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
                   ),
                 ),
               ],
@@ -256,10 +251,7 @@ class _DetailRow extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -304,10 +296,7 @@ class _ItemRow extends StatelessWidget {
                 ),
               ),
               if (qtyPart != null)
-                Text(
-                  qtyPart,
-                  style: TextStyle(color: Colors.grey.shade700),
-                ),
+                Text(qtyPart, style: TextStyle(color: Colors.grey.shade700)),
             ],
           ),
         ),

@@ -86,7 +86,10 @@ class _EditCustomerScreenState extends ConsumerState<EditCustomerScreen> {
             ),
             if (_photoPath != null)
               ListTile(
-                leading: const Icon(Icons.delete_outline, color: KhataColors.debtRed),
+                leading: const Icon(
+                  Icons.delete_outline,
+                  color: KhataColors.debtRed,
+                ),
                 title: const Text('Remove photo'),
                 onTap: () => Navigator.pop(ctx, 'remove'),
               ),
@@ -122,7 +125,9 @@ class _EditCustomerScreenState extends ConsumerState<EditCustomerScreen> {
 
     try {
       final clearPhoto = original.photoPath != null && _photoPath == null;
-      await ref.read(databaseProvider).updateCustomerDetails(
+      await ref
+          .read(databaseProvider)
+          .updateCustomerDetails(
             customerId: widget.customerId,
             name: _nameController.text,
             address: _addressController.text,
@@ -134,14 +139,13 @@ class _EditCustomerScreenState extends ConsumerState<EditCustomerScreen> {
           );
       if (!mounted) return;
       Navigator.pop(context, true);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Customer updated')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Customer updated')));
     } on DuplicatePhoneNumberException catch (_) {
       setState(() {
         _saving = false;
-        _phoneError =
-            'This phone number is already used by another customer.';
+        _phoneError = 'This phone number is already used by another customer.';
       });
     } catch (e) {
       setState(() => _saving = false);
@@ -160,9 +164,8 @@ class _EditCustomerScreenState extends ConsumerState<EditCustomerScreen> {
     final customerAsync = ref.watch(customerProvider(widget.customerId));
 
     return customerAsync.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, _) => Scaffold(
         appBar: AppBar(),
         body: Center(child: Text('$e')),

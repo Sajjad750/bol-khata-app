@@ -7,19 +7,10 @@ import '../services/supabase_service.dart';
 import '../services/sync_service.dart';
 
 /// Where the auth gate should route.
-enum AuthRoute {
-  loading,
-  onboarding,
-  unlock,
-  home,
-}
+enum AuthRoute { loading, onboarding, unlock, home }
 
 class AuthSessionState {
-  const AuthSessionState({
-    required this.route,
-    this.userId,
-    this.message,
-  });
+  const AuthSessionState({required this.route, this.userId, this.message});
 
   final AuthRoute route;
   final String? userId;
@@ -41,7 +32,7 @@ class AuthSessionState {
 
 class AuthController extends StateNotifier<AuthSessionState> {
   AuthController(this._lock)
-      : super(const AuthSessionState(route: AuthRoute.loading));
+    : super(const AuthSessionState(route: AuthRoute.loading));
 
   final LocalLockService _lock;
   bool _unlocked = false;
@@ -95,8 +86,9 @@ class AuthController extends StateNotifier<AuthSessionState> {
     required String userId,
   }) async {
     final existing = await _lock.savedUserId;
-    final ledgerId =
-        (existing != null && existing.isNotEmpty) ? existing : userId;
+    final ledgerId = (existing != null && existing.isNotEmpty)
+        ? existing
+        : userId;
     await _lock.setOnboarded(
       phoneE164: phoneE164,
       userId: ledgerId,
@@ -181,10 +173,7 @@ class AuthController extends StateNotifier<AuthSessionState> {
     await _lock.clearLocalLock(keepLedgerIdentity: true);
     final ledgerId = await _lock.savedUserId;
     _unlocked = false;
-    state = AuthSessionState(
-      route: AuthRoute.onboarding,
-      userId: ledgerId,
-    );
+    state = AuthSessionState(route: AuthRoute.onboarding, userId: ledgerId);
   }
 
   @visibleForTesting
@@ -197,8 +186,8 @@ final localLockServiceProvider = Provider<LocalLockService>((ref) {
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AuthSessionState>((ref) {
-  return AuthController(ref.watch(localLockServiceProvider));
-});
+      return AuthController(ref.watch(localLockServiceProvider));
+    });
 
 /// Per-shopkeeper Drift file so account A data never mixes with account B.
 ///
