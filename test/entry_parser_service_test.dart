@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:khata_app/database/app_database.dart';
 import 'package:khata_app/database/tables.dart';
+import 'package:khata_app/l10n/app_language.dart';
 import 'package:khata_app/services/entry_parser_service.dart';
 
 void main() {
@@ -165,7 +166,7 @@ void main() {
       );
 
       await expectLater(
-        parser.parse('mmm hmm ...'),
+        parser.parse('mmm hmm ...', language: AppLanguage.english),
         throwsA(isA<EntryParseException>()),
       );
       expect(calls, 2); // initial + one retry
