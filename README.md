@@ -13,6 +13,6 @@ The asset declaration currently requires `.env` to exist at build time even when
 
 ## Development
 
-Pull requests and pushes to `main` run [Flutter checks](.github/workflows/flutter-ci.yml): dependency resolution, formatting, analysis, tests and a debug Android build. The workflow uses the same Flutter version as `pubspec.yaml` and a placeholder `.env`.
+Pull requests and pushes to `main` or `codex/*` review branches run [Flutter checks](.github/workflows/flutter-ci.yml): dependency resolution, formatting, analysis, tests and a debug Android build. The workflow uses the same Flutter version as `pubspec.yaml` and a placeholder `.env`.
 
 The [project analysis](PROJECT_ANALYSIS.md) explains the current implementation and risks. The [engineering plan](ENGINEERING_PLAN.md) describes the offline voice experiment, safer ledger and identity design, sync/restore, testing, usability and release steps. Neither document means those planned features are implemented.
