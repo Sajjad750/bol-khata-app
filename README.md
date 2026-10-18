@@ -1,17 +1,18 @@
-# khata_app
+# Bol Khata
 
-A new Flutter project.
+Bol Khata is a Flutter app for shopkeepers to keep customer credit and payment records. It saves customer and ledger changes in an on-device SQLite database. The current voice flow sends recordings to Groq, so voice entry requires internet. Cloud upload uses Supabase when a phone-linked session is available. Cloud restore and on-device speech are planned work.
 
-## Getting Started
+## Local setup
 
-This project is a starting point for a Flutter application.
+1. Install [Flutter 3.44.8](https://github.com/flutter/flutter/releases/tag/3.44.8). Its bundled Dart SDK satisfies the project's Dart 3.12.2 requirement. For Android builds, install the Android SDK and run `flutter doctor`.
+2. Copy `.env.example` to `.env`. Leave the placeholders for local database work and tests. Add your own Groq and Supabase credentials only when testing those services. `.env` is ignored by Git; do not commit real keys.
+3. Run `flutter pub get --enforce-lockfile`, `flutter analyze`, and `flutter test`.
+4. For an Android test build, run `flutter build apk --debug`.
 
-A few resources to get you started if this is your first Flutter project:
+The asset declaration currently requires `.env` to exist at build time even when the app runs without online services. GitHub CI creates it from the placeholder example and never uses production credentials.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Development
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Pull requests and pushes to `main` run [Flutter checks](.github/workflows/flutter-ci.yml): dependency resolution, formatting, analysis, tests and a debug Android build. The workflow uses the same Flutter version as `pubspec.yaml` and a placeholder `.env`.
+
+The [project analysis](PROJECT_ANALYSIS.md) explains the current implementation and risks. The [engineering plan](ENGINEERING_PLAN.md) describes the offline voice experiment, safer ledger and identity design, sync/restore, testing, usability and release steps. Neither document means those planned features are implemented.
