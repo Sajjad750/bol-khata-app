@@ -19,21 +19,9 @@ import 'language_picker_screen.dart';
 import 'ledger_summary_screen.dart';
 import 'link_phone_screen.dart';
 
-enum CustomerSort {
-  recent,
-  nameAsc,
-  nameDesc,
-  balanceHigh,
-  balanceLow,
-}
+enum CustomerSort { recent, nameAsc, nameDesc, balanceHigh, balanceLow }
 
-enum CustomerFilter {
-  all,
-  owesYou,
-  settled,
-  youOwe,
-  numberPending,
-}
+enum CustomerFilter { all, owesYou, settled, youOwe, numberPending }
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -54,14 +42,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _openAddCustomer() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const AddCustomerScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const AddCustomerScreen()));
   }
 
-  List<CustomerListItem> _apply(
-    List<CustomerListItem> source,
-  ) {
+  List<CustomerListItem> _apply(List<CustomerListItem> source) {
     final q = _searchCtrl.text.trim().toLowerCase();
     var list = source.where((item) {
       switch (_filter) {
@@ -199,9 +185,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               if (value == 'language') {
                 await Navigator.of(context).push<void>(
                   MaterialPageRoute<void>(
-                    builder: (_) => const LanguagePickerScreen(
-                      allowSkipIfChosen: true,
-                    ),
+                    builder: (_) =>
+                        const LanguagePickerScreen(allowSkipIfChosen: true),
                   ),
                 );
                 return;
@@ -237,17 +222,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 );
                 if (ok == true && context.mounted) {
-                  await ref.read(authControllerProvider.notifier).signOutFully();
+                  await ref
+                      .read(authControllerProvider.notifier)
+                      .signOutFully();
                 }
               }
             },
             itemBuilder: (context) {
               final s = ref.read(appStringsProvider);
               return [
-                PopupMenuItem(
-                  value: 'language',
-                  child: Text(s.changeLanguage),
-                ),
+                PopupMenuItem(value: 'language', child: Text(s.changeLanguage)),
                 PopupMenuItem(
                   value: 'add_phone',
                   child: Text(s.addPhoneNumber),
@@ -318,8 +302,7 @@ class _HomeBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emptyBecauseFilter =
-        customers.isEmpty && (totalCount ?? 0) > 0;
+    final emptyBecauseFilter = customers.isEmpty && (totalCount ?? 0) > 0;
     final s = ref.watch(appStringsProvider);
     final summaryAsync = ref.watch(shopSummaryProvider);
 
@@ -413,8 +396,9 @@ class _HomeBody extends ConsumerWidget {
                     selectedColor: KhataColors.softGreen,
                     checkmarkColor: KhataColors.primaryGreen,
                     labelStyle: TextStyle(
-                      fontWeight:
-                          filter == f ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: filter == f
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                       color: filter == f
                           ? KhataColors.primaryGreen
                           : Colors.grey.shade800,
@@ -439,17 +423,17 @@ class _HomeBody extends ConsumerWidget {
         Expanded(
           child: customers.isEmpty
               ? (emptyBecauseFilter
-                  ? Center(
-                      child: Text(
-                        'No customers match this search / filter.',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade600,
+                    ? Center(
+                        child: Text(
+                          'No customers match this search / filter.',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  : _EmptyCustomers(onAdd: onAdd))
+                      )
+                    : _EmptyCustomers(onAdd: onAdd))
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   itemCount: customers.length,
@@ -463,11 +447,7 @@ class _HomeBody extends ConsumerWidget {
           top: false,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
-            child: const Column(
-              children: [
-                VoiceEntryButton(),
-              ],
-            ),
+            child: const Column(children: [VoiceEntryButton()]),
           ),
         ),
       ],
@@ -595,8 +575,8 @@ class _CustomerTile extends StatelessWidget {
     final balanceColor = owesYou
         ? KhataColors.primaryGreen
         : youOwe
-            ? KhataColors.debtRed
-            : Colors.grey.shade700;
+        ? KhataColors.debtRed
+        : Colors.grey.shade700;
 
     return Material(
       color: const Color(0xFFF8FAF9),

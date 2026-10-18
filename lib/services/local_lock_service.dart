@@ -14,11 +14,12 @@ class LocalLockService {
   LocalLockService({
     FlutterSecureStorage? storage,
     LocalAuthentication? localAuth,
-  })  : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(encryptedSharedPreferences: true),
-            ),
-        _localAuth = localAuth ?? LocalAuthentication();
+  }) : _storage =
+           storage ??
+           const FlutterSecureStorage(
+             aOptions: AndroidOptions(encryptedSharedPreferences: true),
+           ),
+       _localAuth = localAuth ?? LocalAuthentication();
 
   static const _pinHashKey = 'khata_pin_hash';
   static const _pinSaltKey = 'khata_pin_salt';
@@ -58,9 +59,7 @@ class LocalLockService {
 
   Future<bool> get hasLinkedPhone async {
     final phone = await savedPhone;
-    return phone != null &&
-        phone.isNotEmpty &&
-        !(await isPhoneDeferred);
+    return phone != null && phone.isNotEmpty && !(await isPhoneDeferred);
   }
 
   Future<bool> get isBiometricEnabled async =>

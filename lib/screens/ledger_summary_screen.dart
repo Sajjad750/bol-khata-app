@@ -26,9 +26,7 @@ class LedgerSummaryScreen extends ConsumerWidget {
     final isOwed = kind == LedgerSummaryKind.owed;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isOwed ? s.toCollectTitle : s.receivedTitle),
-      ),
+      appBar: AppBar(title: Text(isOwed ? s.toCollectTitle : s.receivedTitle)),
       body: isOwed
           ? _OwingBody(emptyLabel: s.noOneOwesYou)
           : _ReceivedBody(emptyLabel: s.noPaymentsYet),
@@ -201,15 +199,15 @@ class _PaymentTile extends StatelessWidget {
     final preview = items.isEmpty
         ? null
         : items
-            .map((i) {
-              final price = i.price;
-              if (price == null || price <= 0) return i.itemName;
-              final p = price == price.roundToDouble()
-                  ? price.toInt().toString()
-                  : price.toStringAsFixed(2);
-              return '${i.itemName} — Rs $p';
-            })
-            .join(', ');
+              .map((i) {
+                final price = i.price;
+                if (price == null || price <= 0) return i.itemName;
+                final p = price == price.roundToDouble()
+                    ? price.toInt().toString()
+                    : price.toStringAsFixed(2);
+                return '${i.itemName} — Rs $p';
+              })
+              .join(', ');
 
     return Material(
       color: KhataColors.softGrey,

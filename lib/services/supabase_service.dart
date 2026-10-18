@@ -23,8 +23,7 @@ class SupabaseService {
 
   static bool get isInitialized => _initialized;
 
-  static bool get isReady =>
-      _initialized && isConfigured && hasUsableSession;
+  static bool get isReady => _initialized && isConfigured && hasUsableSession;
 
   static String? get userId => client.auth.currentUser?.id;
 
@@ -108,7 +107,9 @@ class SupabaseService {
 
   /// Soft check: session present locally. Refresh only if clearly expired.
   /// Unlock path should call this without blocking the user on network.
-  static Future<bool> sessionLooksValid({bool allowNetworkRefresh = false}) async {
+  static Future<bool> sessionLooksValid({
+    bool allowNetworkRefresh = false,
+  }) async {
     await ensureInitialized();
     if (!hasUsableSession) return false;
 
@@ -116,8 +117,9 @@ class SupabaseService {
     final expiresAt = session.expiresAt;
     if (expiresAt == null) return true;
 
-    final expired = DateTime.fromMillisecondsSinceEpoch(expiresAt * 1000)
-        .isBefore(DateTime.now());
+    final expired = DateTime.fromMillisecondsSinceEpoch(
+      expiresAt * 1000,
+    ).isBefore(DateTime.now());
     if (!expired) return true;
 
     if (!allowNetworkRefresh) {

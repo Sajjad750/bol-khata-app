@@ -3,10 +3,7 @@ import 'phone_numbers.dart';
 
 /// Customer row for the home list (includes last activity for "2 hours ago").
 class CustomerListItem {
-  const CustomerListItem({
-    required this.customer,
-    this.lastActivityAt,
-  });
+  const CustomerListItem({required this.customer, this.lastActivityAt});
 
   final Customer customer;
   final DateTime? lastActivityAt;

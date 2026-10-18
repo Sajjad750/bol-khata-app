@@ -28,20 +28,25 @@ final owingCustomersProvider = StreamProvider<List<CustomerListItem>>((ref) {
   return ref.watch(databaseProvider).watchOwingCustomers();
 });
 
-final receivedPaymentsProvider =
-    StreamProvider<List<TransactionWithCustomer>>((ref) {
+final receivedPaymentsProvider = StreamProvider<List<TransactionWithCustomer>>((
+  ref,
+) {
   return ref.watch(databaseProvider).watchReceivedPayments();
 });
 
-final customerProvider =
-    StreamProvider.family<Customer?, int>((ref, customerId) {
+final customerProvider = StreamProvider.family<Customer?, int>((
+  ref,
+  customerId,
+) {
   return ref.watch(databaseProvider).watchCustomer(customerId);
 });
 
 final customerTransactionsProvider =
     StreamProvider.family<List<TransactionWithItems>, int>((ref, customerId) {
-  return ref.watch(databaseProvider).watchTransactionsForCustomer(customerId);
-});
+      return ref
+          .watch(databaseProvider)
+          .watchTransactionsForCustomer(customerId);
+    });
 
 /// Count of local rows waiting to push to Supabase (customers + transactions).
 final pendingSyncCountProvider = StreamProvider<int>((ref) {

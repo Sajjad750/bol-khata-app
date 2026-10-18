@@ -161,8 +161,7 @@ class _VoiceEntryButtonState extends ConsumerState<VoiceEntryButton>
 
       if (lockedId != null) {
         // Customer already chosen on their khata page — no fuzzy match needed.
-        final customer =
-            await ref.read(databaseProvider).getCustomer(lockedId);
+        final customer = await ref.read(databaseProvider).getCustomer(lockedId);
         if (customer == null) {
           candidates = const [];
         } else {
@@ -196,7 +195,8 @@ class _VoiceEntryButtonState extends ConsumerState<VoiceEntryButton>
             candidates: candidates,
             ambiguousMatch: ambiguous,
             lockedCustomerId: lockedId,
-            lockedCustomerName: widget.lockedCustomerName ??
+            lockedCustomerName:
+                widget.lockedCustomerName ??
                 (candidates.isEmpty ? null : candidates.first.name),
           ),
         ),
@@ -216,7 +216,8 @@ class _VoiceEntryButtonState extends ConsumerState<VoiceEntryButton>
       await _showError(
         userFacingMessage(
           e,
-          fallback: 'Could not understand the entry. Try again or enter manually.',
+          fallback:
+              'Could not understand the entry. Try again or enter manually.',
         ),
       );
     } catch (e) {
@@ -328,8 +329,8 @@ class _VoiceEntryButtonState extends ConsumerState<VoiceEntryButton>
   @override
   Widget build(BuildContext context) {
     final isRecording = _state == _VoiceUiState.recording;
-    final isBusy = _state == _VoiceUiState.transcribing ||
-        _state == _VoiceUiState.parsing;
+    final isBusy =
+        _state == _VoiceUiState.transcribing || _state == _VoiceUiState.parsing;
     final size = widget.compact ? 56.0 : 88.0;
     final iconSize = widget.compact ? 26.0 : 40.0;
 

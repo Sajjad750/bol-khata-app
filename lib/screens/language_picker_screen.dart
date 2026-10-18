@@ -8,10 +8,7 @@ import '../theme/khata_colors.dart';
 
 /// First-launch (and settings) language chooser.
 class LanguagePickerScreen extends ConsumerStatefulWidget {
-  const LanguagePickerScreen({
-    super.key,
-    this.allowSkipIfChosen = false,
-  });
+  const LanguagePickerScreen({super.key, this.allowSkipIfChosen = false});
 
   /// When true (settings), picking immediately pops.
   final bool allowSkipIfChosen;
@@ -171,9 +168,7 @@ class _LanguageTile extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                selected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_off,
+                selected ? Icons.radio_button_checked : Icons.radio_button_off,
                 color: selected
                     ? KhataColors.primaryGreen
                     : Colors.grey.shade500,

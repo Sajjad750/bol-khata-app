@@ -83,7 +83,8 @@ class BolKhataLogo extends StatelessWidget {
           child: Text(
             BolKhataBrand.appName,
             overflow: TextOverflow.ellipsis,
-            style: nameStyle ??
+            style:
+                nameStyle ??
                 const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,

@@ -53,10 +53,7 @@ void main() {
 
     final history = await db.getTransactionsForCustomer(customer.id);
     expect(history.length, 2);
-    expect(
-      history.map((h) => h.transaction.amount),
-      containsAll([1500, 500]),
-    );
+    expect(history.map((h) => h.transaction.amount), containsAll([1500, 500]));
     // Newest / highest id first when timestamps collide.
     expect(history.first.transaction.id > history.last.transaction.id, isTrue);
 

@@ -4,10 +4,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// Persists the Supabase auth session in the platform secure store.
 class SecureSupabaseLocalStorage extends LocalStorage {
   SecureSupabaseLocalStorage({FlutterSecureStorage? storage})
-      : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(encryptedSharedPreferences: true),
-            );
+    : _storage =
+          storage ??
+          const FlutterSecureStorage(
+            aOptions: AndroidOptions(encryptedSharedPreferences: true),
+          );
 
   static const persistSessionKey = 'khata_supabase_auth_session';
 
@@ -44,10 +45,7 @@ class SecureSupabaseLocalStorage extends LocalStorage {
   @override
   Future<void> persistSession(String persistSessionString) async {
     try {
-      await _storage.write(
-        key: persistSessionKey,
-        value: persistSessionString,
-      );
+      await _storage.write(key: persistSessionKey, value: persistSessionString);
     } catch (_) {}
   }
 }

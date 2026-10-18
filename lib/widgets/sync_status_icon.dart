@@ -18,9 +18,7 @@ class SyncStatusIcon extends ConsumerWidget {
     final fullySynced = pending == 0;
 
     return Tooltip(
-      message: fullySynced
-          ? 'All entries synced'
-          : '$pending waiting to sync',
+      message: fullySynced ? 'All entries synced' : '$pending waiting to sync',
       child: Padding(
         padding: const EdgeInsets.only(right: 8),
         child: Icon(

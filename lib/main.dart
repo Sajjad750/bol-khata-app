@@ -24,9 +24,7 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
-      ],
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
       child: const KhataApp(),
     ),
   );
@@ -47,10 +45,7 @@ class KhataApp extends ConsumerWidget {
       title: BolKhataBrand.appName,
       debugShowCheckedModeBanner: false,
       locale: language.materialLocale,
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ur'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('ur')],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -144,10 +139,7 @@ class KhataApp extends ConsumerWidget {
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: KhataColors.primaryGreen,
           foregroundColor: Colors.white,
-          extendedSizeConstraints: BoxConstraints(
-            minHeight: 56,
-            minWidth: 56,
-          ),
+          extendedSizeConstraints: BoxConstraints(minHeight: 56, minWidth: 56),
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,

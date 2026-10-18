@@ -30,7 +30,10 @@ void main() {
       expect(request.method, 'POST');
       expect(request.headers['Authorization'], 'Bearer test-key');
       // MockClient sees the finalized body Request, not MultipartRequest.
-      return http.Response('{"text":"Ahmed ko paanch sou rupay udhar diya"}', 200);
+      return http.Response(
+        '{"text":"Ahmed ko paanch sou rupay udhar diya"}',
+        200,
+      );
     });
 
     final service = TranscriptionService(
@@ -64,10 +67,7 @@ void main() {
 
   test('API failure surfaces friendly message', () async {
     final client = MockClient((request) async {
-      return http.Response(
-        '{"error":{"message":"Invalid file format"}}',
-        400,
-      );
+      return http.Response('{"error":{"message":"Invalid file format"}}', 400);
     });
     final service = TranscriptionService(
       httpClient: client,

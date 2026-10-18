@@ -27,10 +27,7 @@ class CustomerSearchHit {
 
 /// Fuzzy search outcome. When [ambiguous] is true, the UI must not pre-select.
 class CustomerSearchOutcome {
-  const CustomerSearchOutcome({
-    required this.matches,
-    required this.ambiguous,
-  });
+  const CustomerSearchOutcome({required this.matches, required this.ambiguous});
 
   final List<CustomerSearchHit> matches;
 
@@ -56,8 +53,7 @@ double similarityScore(String a, String b) {
   // Dice coefficient via string_similarity (0–1). Also boost substring hits
   // common for nicknames like "ahmed" inside "cycle wala ahmed".
   final dice = na.similarityTo(nb);
-  final containsBoost =
-      na.contains(nb) || nb.contains(na) ? 0.85 : 0.0;
+  final containsBoost = na.contains(nb) || nb.contains(na) ? 0.85 : 0.0;
   return dice > containsBoost ? dice : containsBoost;
 }
 
@@ -95,18 +91,15 @@ CustomerSearchOutcome rankCustomerMatches({
 
   hits.sort((a, b) => b.score.compareTo(a.score));
 
-  final ambiguous = hits.length >= 2 &&
-      (hits[0].score - hits[1].score) <= ambiguityMargin;
+  final ambiguous =
+      hits.length >= 2 && (hits[0].score - hits[1].score) <= ambiguityMargin;
 
   return CustomerSearchOutcome(matches: hits, ambiguous: ambiguous);
 }
 
 /// A transaction with its optional line items, for customer history views.
 class TransactionWithItems {
-  const TransactionWithItems({
-    required this.transaction,
-    required this.items,
-  });
+  const TransactionWithItems({required this.transaction, required this.items});
 
   final Transaction transaction;
   final List<TransactionItem> items;

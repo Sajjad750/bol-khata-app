@@ -97,16 +97,16 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
                 BolKhataBrand.appName,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      color: KhataColors.primaryGreen,
-                      fontSize: 36,
-                    ),
+                  color: KhataColors.primaryGreen,
+                  fontSize: 36,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 ref.watch(appStringsProvider).enterPinToUnlock,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey.shade700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade700),
               ),
               const SizedBox(height: 28),
               Row(

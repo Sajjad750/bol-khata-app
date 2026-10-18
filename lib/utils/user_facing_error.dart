@@ -129,19 +129,13 @@ class _FriendlyErrorSurface extends StatelessWidget {
                 const Text(
                   'Something went wrong on this screen.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Go back and try again.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey.shade700,
-                  ),
+                  style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
                 ),
               ],
             ),

@@ -98,13 +98,16 @@ class _LinkPhoneScreenState extends ConsumerState<LinkPhoneScreen> {
             children: [
               Text(
                 'Link your shop phone once for cloud backup. Daily unlock stays PIN / biometric.',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey.shade700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade700),
               ),
               const SizedBox(height: 20),
               if (_error != null) ...[
-                Text(_error!, style: const TextStyle(color: KhataColors.debtRed)),
+                Text(
+                  _error!,
+                  style: const TextStyle(color: KhataColors.debtRed),
+                ),
                 const SizedBox(height: 12),
               ],
               TextField(

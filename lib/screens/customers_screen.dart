@@ -57,9 +57,9 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
   }
 
   void _openAdd() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const AddCustomerScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const AddCustomerScreen()));
   }
 
   @override
@@ -135,8 +135,9 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
                               Icon(
                                 Icons.people_outline,
                                 size: 64,
-                                color: KhataColors.primaryGreen
-                                    .withValues(alpha: 0.5),
+                                color: KhataColors.primaryGreen.withValues(
+                                  alpha: 0.5,
+                                ),
                               ),
                               const SizedBox(height: 16),
                               Text(
@@ -200,8 +201,8 @@ class _CustomerManageTile extends StatelessWidget {
     final balanceColor = balance > 0
         ? KhataColors.primaryGreen
         : balance < 0
-            ? KhataColors.debtRed
-            : Colors.grey.shade700;
+        ? KhataColors.debtRed
+        : Colors.grey.shade700;
 
     return Material(
       color: const Color(0xFFF8FAF9),

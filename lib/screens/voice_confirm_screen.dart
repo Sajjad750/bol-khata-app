@@ -182,10 +182,8 @@ class _VoiceConfirmScreenState extends ConsumerState<VoiceConfirmScreen> {
   Future<void> _addItem() async {
     final result = await showDialog<ParsedItem>(
       context: context,
-      builder: (ctx) => const _ItemEditorDialog(
-        title: 'Add item',
-        confirmLabel: 'Add',
-      ),
+      builder: (ctx) =>
+          const _ItemEditorDialog(title: 'Add item', confirmLabel: 'Add'),
     );
     if (result != null && mounted) {
       setState(() {
@@ -201,9 +199,9 @@ class _VoiceConfirmScreenState extends ConsumerState<VoiceConfirmScreen> {
       final name = _newNameController.text.trim();
       final phone = _newPhoneController.text.trim();
       if (name.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Enter a customer name')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Enter a customer name')));
         return;
       }
       if (!PhoneNumbers.isValidPakistaniMobile(phone)) {
@@ -221,9 +219,9 @@ class _VoiceConfirmScreenState extends ConsumerState<VoiceConfirmScreen> {
 
     final amount = _entry.amount;
     if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter the total amount')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Enter the total amount')));
       await _editAmount();
       return;
     }
@@ -429,9 +427,10 @@ class _VoiceConfirmScreenState extends ConsumerState<VoiceConfirmScreen> {
                             name: hit.name,
                             phoneHint: _phoneDigits(hit.phoneNumber),
                             photoPath: hit.photoPath,
-                            selected: !_creatingNew &&
-                                _selectedCustomerId == hit.id,
-                            suggested: _suggestedCustomerId == hit.id &&
+                            selected:
+                                !_creatingNew && _selectedCustomerId == hit.id,
+                            suggested:
+                                _suggestedCustomerId == hit.id &&
                                 _selectedCustomerId == null &&
                                 !_creatingNew,
                             onTap: () {
@@ -606,7 +605,8 @@ class _VoiceConfirmScreenState extends ConsumerState<VoiceConfirmScreen> {
               decoration: BoxDecoration(
                 color: KhataColors.softGrey,
                 borderRadius: BorderRadius.circular(12),
-                border: _entry.confidence == ParseConfidence.low &&
+                border:
+                    _entry.confidence == ParseConfidence.low &&
                         (amount == null || amount <= 0)
                     ? Border.all(color: const Color(0xFFEAB308), width: 2)
                     : null,
@@ -638,9 +638,7 @@ class _VoiceConfirmScreenState extends ConsumerState<VoiceConfirmScreen> {
             controller: _noteController,
             decoration: InputDecoration(
               labelText: 'Note (optional)',
-              hintText: widget.isManual
-                  ? 'e.g. 2 bags rice, 1 oil'
-                  : null,
+              hintText: widget.isManual ? 'e.g. 2 bags rice, 1 oil' : null,
             ),
           ),
           const SizedBox(height: 24),
@@ -680,8 +678,8 @@ class _CustomerChip extends StatelessWidget {
     final borderColor = selected
         ? KhataColors.primaryGreen
         : suggested
-            ? const Color(0xFF86EFAC)
-            : const Color(0xFFD1D5DB);
+        ? const Color(0xFF86EFAC)
+        : const Color(0xFFD1D5DB);
 
     return Material(
       color: selected ? KhataColors.softGreen : Colors.white,
@@ -705,7 +703,10 @@ class _CustomerChip extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
               ),
               Text(
                 phoneHint,
@@ -752,7 +753,9 @@ class _NewCustomerChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: selected ? KhataColors.primaryGreen : const Color(0xFFD1D5DB),
+              color: selected
+                  ? KhataColors.primaryGreen
+                  : const Color(0xFFD1D5DB),
               width: selected ? 2.5 : 1.5,
             ),
           ),
@@ -802,17 +805,15 @@ class _ItemEditorDialogState extends State<_ItemEditorDialog> {
     super.initState();
     final item = widget.initial;
     _nameCtrl = TextEditingController(text: item?.itemName ?? '');
-    _qtyCtrl = TextEditingController(
-      text: item?.quantity?.toString() ?? '',
-    );
+    _qtyCtrl = TextEditingController(text: item?.quantity?.toString() ?? '');
     _unitCtrl = TextEditingController(text: item?.unit ?? '');
     final price = item?.price;
     _priceCtrl = TextEditingController(
       text: price == null
           ? ''
           : (price == price.roundToDouble()
-              ? price.toInt().toString()
-              : price.toString()),
+                ? price.toInt().toString()
+                : price.toString()),
     );
   }
 
@@ -867,23 +868,24 @@ class _ItemEditorDialogState extends State<_ItemEditorDialog> {
             const SizedBox(height: 8),
             TextField(
               controller: _qtyCtrl,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(labelText: 'Quantity'),
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _unitCtrl,
-              decoration:
-                  const InputDecoration(labelText: 'Unit (kg, dozen…)'),
+              decoration: const InputDecoration(labelText: 'Unit (kg, dozen…)'),
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _priceCtrl,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Price (Rs)',
                 hintText: 'Line total — e.g. 20',
@@ -911,10 +913,7 @@ class _ItemEditorDialogState extends State<_ItemEditorDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
-        FilledButton(
-          onPressed: _submit,
-          child: Text(widget.confirmLabel),
-        ),
+        FilledButton(onPressed: _submit, child: Text(widget.confirmLabel)),
       ],
     );
   }
